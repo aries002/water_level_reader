@@ -1,0 +1,8 @@
+.*
+!.gitignore
+contoh/
+*tes*
+*.conf
+config.php
+__pycache__
+data/
