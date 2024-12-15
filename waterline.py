@@ -45,8 +45,8 @@ def water_line(img):
 
     # cari countur dari tepian yang sudah didapat
     contours, hierarchy = cv2.findContours(edged, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    print(contours[1])
-    cv2.drawContours(out, contours[1], -1, (0, 255, 0), 1)
+    print(contours)
+    cv2.drawContours(out, contours, -1, (0, 255, 0), 1)
     # getLargestRedContour(out,contours)
     cv2.imshow('edge', edged)
     cv2.imshow("Process", out)
