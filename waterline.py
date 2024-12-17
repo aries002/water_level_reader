@@ -17,7 +17,7 @@ class water_line:
         self.pause = False
         self.video = True
         # Fine tune sensor
-        self.treshold = 30
+        self.edge_treshold = 30
         self.erode_iteration = 15
         self.dilatte_iteration = 15
         self.Gaussian_ksize = (11, 11)
@@ -31,10 +31,25 @@ class water_line:
             except cv2.error as e:
                 print("Camera error!")
                 print(e)
+            tmp_res = []
+            self.result = 0
+            time = 0.0
             while cam.isOpened() and not self.pause:
                 try:
+
                     ret,image = cam.read()
                     self.image_read(image)
+                    # hitung rata rata dalam 1 detik
+                    if self.nilai > 0:
+                        tmp_res.append(self.nilai)
+                    # jika sudah satu detik maka hitung rata-rata
+                    if time >= 1 and len(tmp_res) > 0:
+                        # rata rata
+                        self.result = int(sum(tmp_res)/max(len(tmp_res),1))
+                        # reset
+                        time = 0.0
+                        tmp_res = []
+                    time = time + self.time_delay
                     sleep(self.time_delay)
                 except:
                     print("Read image error")
@@ -97,7 +112,7 @@ class water_line:
         out = cv2.dilate(out, None, iterations=self.dilatte_iteration)
 
         # cari tepian dari gambar
-        edged = cv2.Canny(out, self.treshold, (self.treshold*3)) 
+        edged = cv2.Canny(out, self.edge_treshold, (self.edge_treshold*3)) 
         # cv2.waitKey(0) 
 
         # cari countur dari tepian yang sudah didapat
