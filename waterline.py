@@ -22,9 +22,11 @@ class water_line:
         self.dilatte_iteration = 15
         self.Gaussian_ksize = (11, 11)
         self.Gaussian_sigmax = 0
+        self.result = 0
         pass
     
     def sensor_loop(self):
+        
         while self.run:
             try:
                 cam = cv2.VideoCapture(self.kamera)
@@ -32,7 +34,6 @@ class water_line:
                 print("Camera error!")
                 print(e)
             tmp_res = []
-            self.result = 0
             time = 0.0
             while cam.isOpened() and not self.pause:
                 try:
