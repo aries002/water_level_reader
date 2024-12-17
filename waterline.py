@@ -14,6 +14,7 @@ class water_line:
         self.time_delay = 1./self.fps
         self.debug = False
         self.run = True
+        self.pause = False
         self.video = True
         # Fine tune sensor
         self.treshold = 30
@@ -24,12 +25,19 @@ class water_line:
         pass
     
     def sensor_loop(self):
-        while True :
-            cam = cv2.VideoCapture(self.kamera)
-            while cam.isOpened() and self.run:
-                ret,image = cam.read()
-                self.image_read(image)
-                sleep(self.time_delay)
+        while self.run:
+            try:
+                cam = cv2.VideoCapture(self.kamera)
+            except cv2.error as e:
+                print("Camera error!")
+                print(e)
+            while cam.isOpened() and not self.pause:
+                try:
+                    ret,image = cam.read()
+                    self.image_read(image)
+                    sleep(self.time_delay)
+                except:
+                    print("Read image error")
             if self.debug:
                 break
             sleep(10)
