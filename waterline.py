@@ -23,22 +23,30 @@ class water_line:
         self.Gaussian_ksize = (11, 11)
         self.Gaussian_sigmax = 0
         self.result = 0
+        self.image = None
         pass
-    
+    def get_image(self):
+        cam = cv2.VideoCapture(self.kamera)
+        while cam.isOpened():
+            ret,self.image = cam.read()
     def sensor_loop(self):
         
         while self.run:
-            try:
-                cam = cv2.VideoCapture(self.kamera)
-            except cv2.error as e:
-                print("Camera error!")
-                print(e)
+            # try:
+            #     cam = cv2.VideoCapture(self.kamera)
+            #     self.pause = False
+            # except cv2.error as e:
+            #     print("Camera error!")
+            #     print(e)
             tmp_res = []
             time = 0.0
-            while cam.isOpened() and not self.pause:
-                try:
-
-                    ret,image = cam.read()
+            while not self.pause:
+                # try:
+                if self.image is not None:
+                    image = self.image
+                    # if(image is None):
+                    #     print("Image error, Restarting stream")
+                    #     self.pause = True
                     self.image_read(image)
                     # hitung rata rata dalam 1 detik
                     if self.nilai > 0:
@@ -52,14 +60,19 @@ class water_line:
                         tmp_res = []
                     time = time + self.time_delay
                     sleep(self.time_delay)
-                except:
-                    print("Read image error")
+                    # except Exception as e:
+                    #     print("Read image error")
+
+                    #     print(repr(e))
             if self.debug:
                 break
-            sleep(10)
+            # sleep(10)
                 
     def image_read(self,img):
         image = img
+        if(image is None):
+            print("Image not found")
+            return
         x1 = self.x1
         x2 = self.x2
         y1 = self.y1
