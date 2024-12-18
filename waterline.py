@@ -26,9 +26,14 @@ class water_line:
         self.image = None
         pass
     def get_image(self):
-        cam = cv2.VideoCapture(self.kamera)
-        while cam.isOpened():
-            ret,self.image = cam.read()
+        while self.run:
+            cam = cv2.VideoCapture(self.kamera)
+            while cam.isOpened() and self.run:
+                ret,self.image = cam.read()
+                if self.image is None:
+                    print("image loss restarting")
+                    break
+            cam.release()
     def sensor_loop(self):
         
         while self.run:
